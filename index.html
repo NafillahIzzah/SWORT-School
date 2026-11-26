@@ -1,213 +1,926 @@
 <!doctype html>
 <html lang="id">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SWORT School – Konsep Sosialisasi 3D</title>
-<style>
-:root{--bg:#f4f1e8;--ink:#1d2b22;--card:rgba(255,255,255,.93);--ac:#1f6b3a;--acink:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15201a;--ink:#eef2ea;--card:rgba(24,36,29,.93);--ac:#7fd49a;--acink:#10261a}}
-:root[data-theme="dark"]{--bg:#15201a;--ink:#eef2ea;--card:rgba(24,36,29,.93);--ac:#7fd49a;--acink:#10261a}
-html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
-canvas{display:block;touch-action:none;cursor:grab}
-.bar{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;gap:8px;align-items:center;flex-wrap:wrap;pointer-events:none}
-.ttl{background:var(--card);padding:8px 14px;border-radius:10px;font-weight:700;pointer-events:auto}
-.ttl small{display:block;font-weight:500;opacity:.75}
-.btns{display:flex;gap:6px;flex-wrap:wrap;pointer-events:auto}
-button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:10px 14px;min-height:44px;background:var(--card);color:var(--ink);cursor:pointer}
-button.on{background:var(--ac);color:var(--acink)}
-#lab div{position:fixed;transform:translate(-50%,-100%);background:var(--ac);color:var(--acink);font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap;pointer-events:none}
-.note{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);background:var(--card);padding:6px 12px;border-radius:10px;font-size:12px;pointer-events:none}
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>SWORT School – Konsep Sosialisasi 3D</title>
+    <style>
+         :root {
+            --bg: #f4f1e8;
+            --ink: #1d2b22;
+            --card: rgba(255, 255, 255, .93);
+            --ac: #1f6b3a;
+            --acink: #fff;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+        
+        @media (prefers-color-scheme:dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #15201a;
+                --ink: #eef2ea;
+                --card: rgba(24, 36, 29, .93);
+                --ac: #7fd49a;
+                --acink: #10261a
+            }
+        }
+        
+        :root[data-theme="dark"] {
+            --bg: #15201a;
+            --ink: #eef2ea;
+            --card: rgba(24, 36, 29, .93);
+            --ac: #7fd49a;
+            --acink: #10261a
+        }
+        
+        html,
+        body {
+            height: 100%;
+            margin: 0
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+            overflow: hidden
+        }
+        
+        canvas {
+            display: block;
+            touch-action: none;
+            cursor: grab
+        }
+        
+        .bar {
+            position: fixed;
+            left: 12px;
+            right: 12px;
+            top: calc(env(safe-area-inset-top, 0px) + 12px);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            pointer-events: none
+        }
+        
+        .ttl {
+            background: var(--card);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            pointer-events: auto
+        }
+        
+        .ttl small {
+            display: block;
+            font-weight: 500;
+            opacity: .75
+        }
+        
+        .btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            pointer-events: auto
+        }
+        
+        button {
+            font: inherit;
+            font-weight: 600;
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            min-height: 44px;
+            background: var(--card);
+            color: var(--ink);
+            cursor: pointer
+        }
+        
+        button.on {
+            background: var(--ac);
+            color: var(--acink)
+        }
+        
+        #lab div {
+            position: fixed;
+            transform: translate(-50%, -100%);
+            background: var(--ac);
+            color: var(--acink);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: 999px;
+            white-space: nowrap;
+            pointer-events: none
+        }
+        
+        .note {
+            position: fixed;
+            left: 12px;
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+            background: var(--card);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            pointer-events: none
+        }
+    </style>
 </head>
+
 <body>
-<div class="bar">
-<div class="ttl">SWORT School – Hari Sosialisasi<small>Lapangan MAN 12 Jakarta Barat · model konsep 3D</small></div>
-<div class="btns"><button data-v="main" class="on">Perspektif</button><button data-v="booth">Booth</button><button data-v="top">Denah atas</button><button id="tl" class="on">Label</button></div>
-</div>
-<div id="lab"></div>
-<div class="note">Seret untuk memutar · scroll/cubit untuk zoom</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-const T=THREE,GR=0x1f6b3a,CR='#f6f1e4';
-const sc=new T.Scene();sc.background=new T.Color(0xcfe0ea);sc.fog=new T.Fog(0xcfe0ea,70,140);
-const cam=new T.PerspectiveCamera(40,1,.1,250);
-const ren=new T.WebGLRenderer({antialias:true});ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.shadowMap.type=T.PCFSoftShadowMap;ren.outputEncoding=T.sRGBEncoding;
-document.body.appendChild(ren.domElement);
-sc.add(new T.HemisphereLight(0xffffff,0x9aa08c,.8));
-const sun=new T.DirectionalLight(0xfff3dc,.85);sun.position.set(-10,22,14);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
-Object.assign(sun.shadow.camera,{left:-24,right:24,top:24,bottom:-24,near:1,far:80});sc.add(sun);
+    <div class="bar">
+        <div class="ttl">SWORT School – Hari Sosialisasi<small>Lapangan MAN 12 Jakarta Barat · model konsep 3D</small></div>
+        <div class="btns"><button data-v="main" class="on">Perspektif</button><button data-v="booth">Booth</button><button data-v="top">Denah atas</button><button id="tl" class="on">Label</button></div>
+    </div>
+    <div id="lab"></div>
+    <div class="note">Seret untuk memutar · scroll/cubit untuk zoom</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const T = THREE,
+            GR = 0x1f6b3a,
+            CR = '#f6f1e4';
+        const sc = new T.Scene();
+        sc.background = new T.Color(0xcfe0ea);
+        sc.fog = new T.Fog(0xcfe0ea, 70, 140);
+        const cam = new T.PerspectiveCamera(40, 1, .1, 250);
+        const ren = new T.WebGLRenderer({
+            antialias: true
+        });
+        ren.setPixelRatio(Math.min(devicePixelRatio, 2));
+        ren.shadowMap.enabled = true;
+        ren.shadowMap.type = T.PCFSoftShadowMap;
+        ren.outputEncoding = T.sRGBEncoding;
+        document.body.appendChild(ren.domElement);
+        sc.add(new T.HemisphereLight(0xffffff, 0x9aa08c, .8));
+        const sun = new T.DirectionalLight(0xfff3dc, .85);
+        sun.position.set(-10, 22, 14);
+        sun.castShadow = true;
+        sun.shadow.mapSize.set(2048, 2048);
+        Object.assign(sun.shadow.camera, {
+            left: -24,
+            right: 24,
+            top: 24,
+            bottom: -24,
+            near: 1,
+            far: 80
+        });
+        sc.add(sun);
 
-const M=(c,o)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:.85},o||{}));
-function add(geo,mat,x,y,z,p){const m=new T.Mesh(geo,mat.isMaterial?mat:M(mat));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;(p||sc).add(m);return m}
-const bx=(w,h,d,c,x,y,z,p)=>add(new T.BoxGeometry(w,h,d),c,x,y,z,p);
-const cy=(a,b,h,c,x,y,z,p,s)=>add(new T.CylinderGeometry(a,b,h,s||16),c,x,y,z,p);
-function tex(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);const t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;t.anisotropy=8;return t}
-function pl(w,h,t,x,y,z,ry,p){const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map:t,roughness:.9}));m.position.set(x,y,z);m.rotation.y=ry||0;(p||sc).add(m);return m}
-const F=(ctx,s,w)=>ctx.font=(w||800)+' '+s+'px system-ui,Arial,sans-serif';
-function txt(c,s,x,y,col,w,sz){c.fillStyle=col;c.textAlign='center';c.textBaseline='middle';F(c,sz,w);c.fillText(s,x,y)}
-function sprout(c,x,y,s,col){c.fillStyle=col;c.strokeStyle=col;c.lineWidth=7*s;c.lineCap='round';c.beginPath();c.moveTo(x,y);c.lineTo(x,y-60*s);c.stroke();
-c.beginPath();c.moveTo(x,y-30*s);c.bezierCurveTo(x-40*s,y-30*s,x-58*s,y-55*s,x-58*s,y-85*s);c.bezierCurveTo(x-20*s,y-85*s,x,y-60*s,x,y-30*s);c.fill();
-c.beginPath();c.moveTo(x,y-48*s);c.bezierCurveTo(x+40*s,y-48*s,x+58*s,y-72*s,x+58*s,y-102*s);c.bezierCurveTo(x+20*s,y-102*s,x,y-78*s,x,y-48*s);c.fill()}
-function qr(c,x,y,s){let r=7;const n=25,m=s/n;c.fillStyle='#fff';c.fillRect(x,y,s,s);c.fillStyle='#14281c';
-for(let i=0;i<n;i++)for(let j=0;j<n;j++){const f=(i<8&&j<8)||(i>16&&j<8)||(i<8&&j>16);if(f)continue;r=(r*9301+49297)%233280;if(r/233280>.52)c.fillRect(x+i*m,y+j*m,m,m)}
-[[0,0],[18,0],[0,18]].forEach(([a,b])=>{c.fillStyle='#14281c';c.fillRect(x+a*m,y+b*m,7*m,7*m);c.fillStyle='#fff';c.fillRect(x+(a+1)*m,y+(b+1)*m,5*m,5*m);c.fillStyle='#14281c';c.fillRect(x+(a+2)*m,y+(b+2)*m,3*m,3*m)})}
-const CAT=[['Organik','#2e8b4f'],['Anorganik','#2f6fa8'],['Maggot-Friendly','#e0a526']];
+        const M = (c, o) => new T.MeshStandardMaterial(Object.assign({
+            color: c,
+            roughness: .85
+        }, o || {}));
 
-/* ground */
-const gt=tex(256,256,(c)=>{c.fillStyle='#c6c3b8';c.fillRect(0,0,256,256);c.strokeStyle='#b0ada1';c.lineWidth=3;c.strokeRect(0,0,256,256)});
-gt.wrapS=gt.wrapT=T.RepeatWrapping;gt.repeat.set(30,20);
-const gm=new T.Mesh(new T.PlaneGeometry(90,60),new T.MeshStandardMaterial({map:gt,roughness:.95}));gm.rotation.x=-Math.PI/2;gm.position.set(0,0,-10);gm.receiveShadow=true;sc.add(gm);
+        function add(geo, mat, x, y, z, p) {
+            const m = new T.Mesh(geo, mat.isMaterial ? mat : M(mat));
+            m.position.set(x, y, z);
+            m.castShadow = m.receiveShadow = true;
+            (p || sc).add(m);
+            return m
+        }
+        const bx = (w, h, d, c, x, y, z, p) => add(new T.BoxGeometry(w, h, d), c, x, y, z, p);
+        const cy = (a, b, h, c, x, y, z, p, s) => add(new T.CylinderGeometry(a, b, h, s || 16), c, x, y, z, p);
 
-/* school building */
-const ft=tex(2048,420,(c,w,h)=>{c.fillStyle='#efe9d8';c.fillRect(0,0,w,h);
-for(let f=0;f<3;f++){const y=40+f*125;c.fillStyle='#d9d2bd';c.fillRect(0,y+88,w,14);
-for(let i=0;i<22;i++){const x=40+i*92;c.fillStyle='#fff';c.fillRect(x,y,60,80);c.fillStyle='#7f9bab';c.fillRect(x+5,y+5,50,70);c.fillStyle='#fff';c.fillRect(x+28,y+5,4,70)}}
-c.fillStyle='#1f6b3a';c.fillRect(0,0,w,18);c.fillStyle='#bdb7a3';c.fillRect(0,h-26,w,26)});
-bx(60,13,10,'#e6dfca',0,6.5,-26);pl(60,13,ft,0,6.5,-20.98);bx(61,.5,11,'#8a8f93',0,13.2,-26);
+        function tex(w, h, f) {
+            const c = document.createElement('canvas');
+            c.width = w;
+            c.height = h;
+            f(c.getContext('2d'), w, h);
+            const t = new T.CanvasTexture(c);
+            t.encoding = T.sRGBEncoding;
+            t.anisotropy = 8;
+            return t
+        }
 
-/* booth */
-const B=new T.Group();B.position.set(0,0,-8);sc.add(B);
-[[-1.5,-1.5],[1.5,-1.5],[-1.5,1.5],[1.5,1.5]].forEach(([x,z])=>cy(.026,.026,2.4,'#9aa0a6',x,1.2,z,B,8));
-add(new T.ConeGeometry(2.35,.8,4),M('#fafafa'),0,2.8,0,B).rotation.y=Math.PI/4;
-bx(3.1,.28,.04,GR,0,2.28,1.55,B);bx(3.1,.28,.04,GR,0,2.28,-1.55,B);bx(.04,.28,3.1,GR,-1.55,2.28,0,B);bx(.04,.28,3.1,GR,1.55,2.28,0,B);
-bx(3.1,.06,3.1,'#fafafa',0,2.42,0,B);
-const bd=tex(1200,900,(c,w,h)=>{c.fillStyle='#1f6b3a';c.fillRect(0,0,w,h);sprout(c,w/2,250,1.5,CR);
-txt(c,'SWORT',w/2,380,CR,800,230);txt(c,'School',w/2,520,CR,500,110);txt(c,'SMART WASTE SORTING SCHOOL',w/2,615,CR,500,38);
-txt(c,'Pilah dari sekolah, bumi lebih lega.',w/2,700,CR,700,48);
-c.fillStyle=CR;c.fillRect(0,790,w,110);CAT.forEach((k,i)=>{c.fillStyle=k[1];c.beginPath();c.arc(150+i*400,845,16,0,7);c.fill();txt(c,k[0],150+i*400+(i==2?105:80),845,'#1f6b3a',800,34)})});
-pl(2.9,2.18,bd,0,1.2,-1.46,0,B);
-bx(.03,2.3,3,'#f2f2ee',-1.5,1.2,0,B);bx(.03,2.3,3,'#f2f2ee',1.5,1.2,0,B);
-/* table */
-const tb=tex(1000,400,(c,w,h)=>{c.fillStyle='#1f6b3a';c.fillRect(0,0,w,h);txt(c,'SWORT School',500,165,CR,800,104);txt(c,'Smart Waste Sorting School',500,275,CR,500,44)});
-bx(1.85,.04,.66,'#ffffff',0,.76,.0,B).position.z=.7;
-pl(1.85,.74,tb,0,.38,1.04,0,B);
-bx(.02,.7,.6,'#e8e8e4',-.9,.38,.7,B);bx(.02,.7,.6,'#e8e8e4',.9,.38,.7,B);
-/* roll-up banner */
-const ru=tex(500,1200,(c,w,h)=>{c.fillStyle=CR;c.fillRect(0,0,w,h);c.fillStyle='#1f6b3a';c.fillRect(0,0,w,330);sprout(c,w/2,210,.9,CR);txt(c,'SWORT School',w/2,270,CR,800,64);
-txt(c,'Pilah dari',w/2,430,'#1f6b3a',800,70);txt(c,'sekolah,',w/2,500,'#1f6b3a',800,70);txt(c,'bumi lebih lega.',w/2,570,'#1f6b3a',800,50);
-CAT.forEach((k,i)=>{c.fillStyle=k[1];c.fillRect(70,680+i*130,70,70);txt(c,k[0],170,715+i*130,'#1d2b22',700,i==2?42:48);c.textAlign='left'});
-c.fillStyle='#1f6b3a';c.fillRect(0,1130,w,70)});
+        function pl(w, h, t, x, y, z, ry, p) {
+            const m = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshStandardMaterial({
+                map: t,
+                roughness: .9
+            }));
+            m.position.set(x, y, z);
+            m.rotation.y = ry || 0;
+            (p || sc).add(m);
+            return m
+        }
+        const F = (ctx, s, w) => ctx.font = (w || 800) + ' ' + s + 'px system-ui,Arial,sans-serif';
+
+        function txt(c, s, x, y, col, w, sz) {
+            c.fillStyle = col;
+            c.textAlign = 'center';
+            c.textBaseline = 'middle';
+            F(c, sz, w);
+            c.fillText(s, x, y)
+        }
+
+        function sprout(c, x, y, s, col) {
+            c.fillStyle = col;
+            c.strokeStyle = col;
+            c.lineWidth = 7 * s;
+            c.lineCap = 'round';
+            c.beginPath();
+            c.moveTo(x, y);
+            c.lineTo(x, y - 60 * s);
+            c.stroke();
+            c.beginPath();
+            c.moveTo(x, y - 30 * s);
+            c.bezierCurveTo(x - 40 * s, y - 30 * s, x - 58 * s, y - 55 * s, x - 58 * s, y - 85 * s);
+            c.bezierCurveTo(x - 20 * s, y - 85 * s, x, y - 60 * s, x, y - 30 * s);
+            c.fill();
+            c.beginPath();
+            c.moveTo(x, y - 48 * s);
+            c.bezierCurveTo(x + 40 * s, y - 48 * s, x + 58 * s, y - 72 * s, x + 58 * s, y - 102 * s);
+            c.bezierCurveTo(x + 20 * s, y - 102 * s, x, y - 78 * s, x, y - 48 * s);
+            c.fill()
+        }
+
+        function qr(c, x, y, s) {
+            let r = 7;
+            const n = 25,
+                m = s / n;
+            c.fillStyle = '#fff';
+            c.fillRect(x, y, s, s);
+            c.fillStyle = '#14281c';
+            for (let i = 0; i < n; i++)
+                for (let j = 0; j < n; j++) {
+                    const f = (i < 8 && j < 8) || (i > 16 && j < 8) || (i < 8 && j > 16);
+                    if (f) continue;
+                    r = (r * 9301 + 49297) % 233280;
+                    if (r / 233280 > .52) c.fillRect(x + i * m, y + j * m, m, m)
+                }
+                [
+                    [0, 0],
+                    [18, 0],
+                    [0, 18]
+                ].forEach(([a, b]) => {
+                    c.fillStyle = '#14281c';
+                    c.fillRect(x + a * m, y + b * m, 7 * m, 7 * m);
+                    c.fillStyle = '#fff';
+                    c.fillRect(x + (a + 1) * m, y + (b + 1) * m, 5 * m, 5 * m);
+                    c.fillStyle = '#14281c';
+                    c.fillRect(x + (a + 2) * m, y + (b + 2) * m, 3 * m, 3 * m)
+                })
+        }
+        const CAT = [
+            ['Organik', '#2e8b4f'],
+            ['Anorganik', '#2f6fa8'],
+            ['Maggot-Friendly', '#e0a526']
+        ];
+
+        /* ground */
+        const gt = tex(256, 256, (c) => {
+            c.fillStyle = '#c6c3b8';
+            c.fillRect(0, 0, 256, 256);
+            c.strokeStyle = '#b0ada1';
+            c.lineWidth = 3;
+            c.strokeRect(0, 0, 256, 256)
+        });
+        gt.wrapS = gt.wrapT = T.RepeatWrapping;
+        gt.repeat.set(30, 20);
+        const gm = new T.Mesh(new T.PlaneGeometry(90, 60), new T.MeshStandardMaterial({
+            map: gt,
+            roughness: .95
+        }));
+        gm.rotation.x = -Math.PI / 2;
+        gm.position.set(0, 0, -10);
+        gm.receiveShadow = true;
+        sc.add(gm);
+
+        /* school building */
+        const ft = tex(2048, 420, (c, w, h) => {
+            c.fillStyle = '#efe9d8';
+            c.fillRect(0, 0, w, h);
+            for (let f = 0; f < 3; f++) {
+                const y = 40 + f * 125;
+                c.fillStyle = '#d9d2bd';
+                c.fillRect(0, y + 88, w, 14);
+                for (let i = 0; i < 22; i++) {
+                    const x = 40 + i * 92;
+                    c.fillStyle = '#fff';
+                    c.fillRect(x, y, 60, 80);
+                    c.fillStyle = '#7f9bab';
+                    c.fillRect(x + 5, y + 5, 50, 70);
+                    c.fillStyle = '#fff';
+                    c.fillRect(x + 28, y + 5, 4, 70)
+                }
+            }
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, 18);
+            c.fillStyle = '#bdb7a3';
+            c.fillRect(0, h - 26, w, 26)
+        });
+        bx(60, 13, 10, '#e6dfca', 0, 6.5, -26);
+        pl(60, 13, ft, 0, 6.5, -20.98);
+        bx(61, .5, 11, '#8a8f93', 0, 13.2, -26);
+
+        /* booth */
+        const B = new T.Group();
+        B.position.set(0, 0, -8);
+        sc.add(B);
+        [
+            [-1.5, -1.5],
+            [1.5, -1.5],
+            [-1.5, 1.5],
+            [1.5, 1.5]
+        ].forEach(([x, z]) => cy(.026, .026, 2.4, '#9aa0a6', x, 1.2, z, B, 8));
+        add(new T.ConeGeometry(2.35, .8, 4), M('#fafafa'), 0, 2.8, 0, B).rotation.y = Math.PI / 4;
+        bx(3.1, .28, .04, GR, 0, 2.28, 1.55, B);
+        bx(3.1, .28, .04, GR, 0, 2.28, -1.55, B);
+        bx(.04, .28, 3.1, GR, -1.55, 2.28, 0, B);
+        bx(.04, .28, 3.1, GR, 1.55, 2.28, 0, B);
+        bx(3.1, .06, 3.1, '#fafafa', 0, 2.42, 0, B);
+        const bd = tex(1200, 900, (c, w, h) => {
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, h);
+            sprout(c, w / 2, 250, 1.5, CR);
+            txt(c, 'SWORT', w / 2, 380, CR, 800, 230);
+            txt(c, 'School', w / 2, 520, CR, 500, 110);
+            txt(c, 'SMART WASTE SORTING SCHOOL', w / 2, 615, CR, 500, 38);
+            txt(c, 'Pilah dari sekolah, bumi lebih lega.', w / 2, 700, CR, 700, 48);
+            c.fillStyle = CR;
+            c.fillRect(0, 790, w, 110);
+            CAT.forEach((k, i) => {
+                c.fillStyle = k[1];
+                c.beginPath();
+                c.arc(150 + i * 400, 845, 16, 0, 7);
+                c.fill();
+                txt(c, k[0], 150 + i * 400 + (i == 2 ? 105 : 80), 845, '#1f6b3a', 800, 34)
+            })
+        });
+        pl(2.9, 2.18, bd, 0, 1.2, -1.46, 0, B);
+        bx(.03, 2.3, 3, '#f2f2ee', -1.5, 1.2, 0, B);
+        bx(.03, 2.3, 3, '#f2f2ee', 1.5, 1.2, 0, B);
+        /* table */
+        const tb = tex(1000, 400, (c, w, h) => {
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, h);
+            txt(c, 'SWORT School', 500, 165, CR, 800, 104);
+            txt(c, 'Smart Waste Sorting School', 500, 275, CR, 500, 44)
+        });
+        bx(1.85, .04, .66, '#ffffff', 0, .76, .0, B).position.z = .7;
+        pl(1.85, .74, tb, 0, .38, 1.04, 0, B);
+        bx(.02, .7, .6, '#e8e8e4', -.9, .38, .7, B);
+        bx(.02, .7, .6, '#e8e8e4', .9, .38, .7, B);
+        /* roll-up banner */
+        const ru = tex(500, 1200, (c, w, h) => {
+            c.fillStyle = CR;
+            c.fillRect(0, 0, w, h);
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, 330);
+            sprout(c, w / 2, 210, .9, CR);
+            txt(c, 'SWORT School', w / 2, 270, CR, 800, 64);
+            txt(c, 'Pilah dari', w / 2, 430, '#1f6b3a', 800, 70);
+            txt(c, 'sekolah,', w / 2, 500, '#1f6b3a', 800, 70);
+            txt(c, 'bumi lebih lega.', w / 2, 570, '#1f6b3a', 800, 50);
+            CAT.forEach((k, i) => {
+                c.fillStyle = k[1];
+                c.fillRect(70, 680 + i * 130, 70, 70);
+                txt(c, k[0], 170, 715 + i * 130, '#1d2b22', 700, i == 2 ? 42 : 48);
+                c.textAlign = 'left'
+            });
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 1130, w, 70)
+        });
 
 
-/* fans */
-function fan(){const g=new T.Group();const d=cy(.125,.125,.008,GR,0,.17,0,g,28);d.rotation.x=Math.PI/2;const r=cy(.09,.09,.01,'#f6f1e4',0,.17,0,g,28);r.rotation.x=Math.PI/2;bx(.032,.15,.008,'#d9bc8e',0,.04,0,g);return g}
-[[-.45,.2,.2],[-.1,.35,.05],[.3,.55,-.15]].forEach(([x,z,ry])=>{const f=fan();f.rotation.x=-Math.PI/2;f.rotation.z=ry;f.position.set(x,.79,z+.55);B.add(f)});
-[[.8,.7],[.8,.78]].forEach(([x,y],i)=>bx(.2,.045,.28,i?'#ffffff':'#d8e8d9',x,.8+i*.05,.65,B));
+        /* fans */
+        function fan() {
+            const g = new T.Group();
+            const d = cy(.125, .125, .008, GR, 0, .17, 0, g, 28);
+            d.rotation.x = Math.PI / 2;
+            const r = cy(.09, .09, .01, '#f6f1e4', 0, .17, 0, g, 28);
+            r.rotation.x = Math.PI / 2;
+            bx(.032, .15, .008, '#d9bc8e', 0, .04, 0, g);
+            return g
+        }
+        [
+            [-.45, .2, .2],
+            [-.1, .35, .05],
+            [.3, .55, -.15]
+        ].forEach(([x, z, ry]) => {
+            const f = fan();
+            f.rotation.x = -Math.PI / 2;
+            f.rotation.z = ry;
+            f.position.set(x, .79, z + .55);
+            B.add(f)
+        });
+        [
+            [.8, .7],
+            [.8, .78]
+        ].forEach(([x, y], i) => bx(.2, .045, .28, i ? '#ffffff' : '#d8e8d9', x, .8 + i * .05, .65, B));
 
-/* people */
-function person(x,z,fx,fz,o){const g=new T.Group(),k=(o.h||1.65)/1.7,sk=o.skin||0xc08e63;
-const A=(c,geo,px,py,pz,p)=>{const m=new T.Mesh(geo,M(c));m.position.set(px,py,pz);m.castShadow=true;(p||g).add(m);return m};
-const C=T.CylinderGeometry,S=T.SphereGeometry;
-[-1,1].forEach(s=>{A(o.pants,new C(.06*k,.05*k,.78*k,10),s*.085*k,.41*k,0);A(o.shoe||0x2a2a2a,new T.BoxGeometry(.09*k,.06*k,.22*k),s*.085*k,.03*k,.04*k)});
-if(o.skirt)A(o.pants,new C(.16*k,.21*k,.72*k,16),0,.46*k,0);
-A(o.shirt,new C(.16*k,.14*k,.64*k,16),0,1.12*k,0);
-A(sk,new C(.04*k,.045*k,.1*k,8),0,1.47*k,0);
-A(sk,new S(.105*k,18,14),0,1.58*k,0);
-if(o.hijab){A(o.hijab,new S(.125*k,18,14),0,1.585*k,-.012*k).scale.set(1,1.08,1.06);A(o.hijab,new C(.115*k,.2*k,.28*k,18),0,1.4*k,-.012*k)}
-else A(0x1c1410,new S(.112*k,16,12),0,1.61*k,-.025*k).scale.set(1,.92,1);
-A(0xffffff,new T.BoxGeometry(.08*k,.1*k,.01*k),0,1.2*k,.15*k);
-[-1,1].forEach((s,i)=>{const pv=new T.Group();pv.position.set(s*.2*k,1.38*k,0);g.add(pv);
-A(o.shirt,new C(.04*k,.037*k,.36*k,10),0,-.18*k,0,pv);A(sk,new C(.034*k,.03*k,.26*k,10),0,-.49*k,0,pv);A(sk,new S(.038*k,10,8),0,-.64*k,0,pv);
-pv.rotation.x=o.arms?o.arms[i]:.05;pv.rotation.z=s*.07;
-if(i==1&&o.hold){const h=o.hold=='fan'?fan():o.hold=='phone'?new T.Group():new T.Group();
-if(o.hold=='phone'){bx(.075,.15,.012,'#111',0,.1,.03,h);bx(.065,.13,.002,'#8fc4e8',0,.1,.037,h)}
-if(o.hold=='bottle'){cy(.032,.032,.2,'#cfe6f3',0,.08,.0,h,10);cy(.012,.012,.04,GR,0,.2,0,h,8)}
-if(o.hold=='box'){bx(.2,.05,.13,'#f1efe6',0,.06,.0,h);bx(.16,.014,.1,'#8fb55a',0,.092,0,h)}
-h.position.set(0,-.66*k,.03);h.rotation.x=-pv.rotation.x;pv.add(h)}});
-g.position.set(x,0,z);g.rotation.y=Math.atan2(fx-x,fz-z);sc.add(g)}
-const TS=(a,h)=>({shirt:0x1f6b3a,pants:0x3b4252,shoe:0xeeeeee,h,arms:a});
-const ST=(o)=>Object.assign({shirt:0xf3f3ee,pants:0x6f757b},o);
-person(-1.8,-5.5,0,-2,Object.assign(TS([-.5,-1.05],1.72)));
-person(1.1,-5.6,0,-2,Object.assign(TS([.05,-1.45],1.66),{skin:0xb98558,hijab:0xf2f2ee,skirt:1,pants:0x2e3440,hold:'box'}));
-person(-.4,-8.2,-.2,-3.8,Object.assign(TS([.05,-.8],1.7),{hold:'fan'}));
-/* meja demonstrasi + media maggot BSF */
-const D=new T.Group();D.position.set(-3.5,0,-5.4);sc.add(D);
-const dt=tex(1000,400,(c,w,h)=>{c.fillStyle='#f6f1e4';c.fillRect(0,0,w,h);c.fillStyle='#1f6b3a';c.fillRect(0,0,w,70);txt(c,'Ayo, Pilah Sampah',500,190,'#1f6b3a',800,82);txt(c,'Organik · Anorganik · Maggot-Friendly',500,300,'#2a3a2f',500,36)});
-bx(2.1,.04,.7,'#ffffff',0,.76,0,D);pl(2.1,.74,dt,0,.38,.352,0,D);bx(.02,.7,.66,'#e8e8e4',-1.04,.38,0,D);bx(.02,.7,.66,'#e8e8e4',1.04,.38,0,D);
-add(new T.BoxGeometry(.4,.2,.26),new T.MeshStandardMaterial({color:0xcfe6ee,transparent:true,opacity:.3,roughness:.1}),-.7,.88,0,D);bx(.38,.08,.24,'#4e3b28',-.7,.82,0,D);
-{let s=11;for(let i=0;i<40;i++){s=(s*9301+49297)%233280;const a=s/233280;s=(s*9301+49297)%233280;const b=s/233280;const m=add(new T.SphereGeometry(.014,6,5),'#efe2b3',-.7+(a-.5)*.34,.866,(b-.5)*.2,D);m.scale.set(1,.7,1.9);m.rotation.y=a*6}}
-bx(.3,.03,.22,'#2e8b4f',-.1,.795,0,D);[[-.06,.03,.4],[0,-.03,-.5],[.07,.02,1.2]].forEach(([a,b,r])=>{bx(.1,.006,.045,'#8b6b3a',-.1+a,.816,b,D).rotation.y=r});
-bx(.3,.03,.22,'#2f6fa8',.35,.795,0,D);cy(.03,.03,.17,'#cfe6f3',.31,.84,0,D,10).rotation.z=Math.PI/2;bx(.1,.01,.07,'#d94f4f',.4,.815,.03,D);
-bx(.3,.03,.22,'#e0a526',.8,.795,0,D);add(new T.SphereGeometry(.05,10,8),'#f8f6ee',.76,.83,0,D).scale.y=.6;cy(.015,.015,.08,'#e8782a',.86,.83,.04,D,8).rotation.z=1.2;add(new T.SphereGeometry(.03,8,6),'#5a9a3c',.84,.835,-.05,D);
-const pt=tex(500,1200,(c,w,h)=>{c.fillStyle='#f6f1e4';c.fillRect(0,0,w,h);c.fillStyle='#1f6b3a';c.fillRect(0,0,w,150);txt(c,'Kenali Maggot BSF',w/2,75,CR,800,48);c.fillRect(0,1100,w,100);txt(c,'SWORT School',w/2,1150,CR,800,46);
-['Sisa makanan','↓','Maggot BSF','↓','Pupuk & pakan'].forEach((s,i)=>txt(c,s,w/2,290+i*120,i%2?'#e0a526':'#1f6b3a',800,i%2?70:62))});
-bx(.9,.04,.3,'#555',-5.4,.02,-5.4);const pt2=tex(500,1200,(c,w,h)=>{const L=(s,x,y,col,wt,sz)=>{c.fillStyle=col;c.textAlign='left';c.textBaseline='middle';F(c,sz,wt);c.fillText(s,x,y)};
-c.fillStyle='#f6f1e4';c.fillRect(0,0,w,h);c.fillStyle='#1f6b3a';c.fillRect(0,0,w,150);txt(c,'Kenali Maggot BSF',w/2,66,CR,800,48);txt(c,'Black Soldier Fly',w/2,114,CR,500,26);
-L('Apa itu maggot BSF?',36,195,'#1f6b3a',800,30);['Larva lalat tentara hitam','yang mengurai sisa makanan','menjadi pupuk dan pakan.'].forEach((s,i)=>L(s,36,237+i*34,'#2a3a2f',500,26));
-c.fillStyle='#e3edda';c.fillRect(36,350,428,200);L('Boleh diberikan',56,385,'#1f6b3a',800,28);
-['Sisa nasi & lauk','Sisa sayur','Kulit buah (pisang, apel)','Ampas teh'].forEach((s,i)=>{c.fillStyle='#2e8b4f';c.beginPath();c.arc(66,429+i*34,6,0,7);c.fill();L(s,84,429+i*34,'#2a3a2f',500,25)});
-c.fillStyle='#f4e3dc';c.fillRect(36,575,428,190);L('Jangan diberikan',56,610,'#b0432e',800,28);
-['Plastik & kemasan','Tulang & duri keras','Jeruk, pedas & berminyak'].forEach((s,i)=>{c.fillStyle='#b0432e';c.beginPath();c.arc(66,654+i*34,6,0,7);c.fill();L(s,84,654+i*34,'#2a3a2f',500,25)});
-L('Alur pengolahan',36,805,'#1f6b3a',800,28);
-[['Sisa makanan','#e0a526','#2a3a2f'],['Maggot BSF','#1f6b3a','#f6f1e4'],['Pupuk & pakan','#2e8b4f','#f6f1e4']].forEach((a,i)=>{const y=830+i*95;c.fillStyle=a[1];c.fillRect(36,y,428,60);txt(c,a[0],w/2,y+30,a[2],800,30);if(i<2){c.fillStyle='#2a3a2f';c.beginPath();c.moveTo(w/2-14,y+66);c.lineTo(w/2+14,y+66);c.lineTo(w/2,y+88);c.fill()}});
-c.fillStyle='#1f6b3a';c.fillRect(0,1100,w,100);txt(c,'SWORT School',w/2,1150,CR,800,46)});
-pl(.85,2.04,pt2,-5.4,1.07,-5.38,.15);
-/* audiens duduk */
-const mm=(()=>{const c={};return k=>c[k]||(c[k]=M(k))})();
-const gS=new T.SphereGeometry(.105,14,10),gH=new T.SphereGeometry(.125,14,10),gHr=new T.SphereGeometry(.112,12,8),gT=new T.CylinderGeometry(.15,.13,.56,12),gL=new T.CylinderGeometry(.07,.06,.55,8),gSk=new T.CylinderGeometry(.16,.36,.2,16),gA=new T.CylinderGeometry(.04,.036,.4,8),gHd=new T.SphereGeometry(.04,8,6),gD=new T.CylinderGeometry(.115,.19,.3,14);
-let rs_=5;const rnd=()=>(rs_=(rs_*9301+49297)%233280)/233280;
-const SK=[0xc08e63,0xb98558,0xc99a70,0xa87850,0xd1a67c],HJ=[0xf2f2ee,0xe3e0d6,0xc9ccd0];
-function junk(t){const g=new T.Group();
-if(t==0){bx(.18,.05,.12,'#f1efe6',0,.025,0,g);bx(.14,.012,.09,['#8fb55a','#e0a050','#d9d4c0'][Math.floor(rnd()*3)],0,.056,0,g)}
-else if(t==1){cy(.03,.03,.18,'#bcdcee',0,.09,0,g,10);cy(.012,.012,.03,GR,0,.2,0,g,8)}
-else if(t==2){cy(.04,.03,.1,'#f4f8fa',0,.05,0,g,10)}
-else bx(.12,.012,.08,['#d94f4f','#e8b13a','#4a7fb5'][Math.floor(rnd()*3)],0,.008,0,g);
-return g}
-function sitter(x,z,girl,hold){const g=new T.Group(),sk=SK[Math.floor(rnd()*5)];
-const A=(geo,c,px,py,pz,rx)=>{const m=new T.Mesh(geo,mm(c));m.position.set(px,py,pz);if(rx)m.rotation.x=rx;m.castShadow=true;g.add(m);return m};
-if(girl)A(gSk,0x6f757b,0,.12,.12);else[-1,1].forEach(s=>A(gL,0x6f757b,s*.15,.07,.3,Math.PI/2));
-A(gT,0xf3f3ee,0,.43,-.02);A(gS,sk,0,.83,0);
-if(girl){const hj=HJ[Math.floor(rnd()*3)];A(gH,hj,0,.84,-.012).scale.set(1,1.08,1.06);A(gD,hj,0,.7,-.01)}else A(gHr,0x1c1410,0,.855,-.022).scale.set(1,.9,1);
-[-1,1].forEach((s,i)=>{const pv=new T.Group();pv.position.set(s*.18,.68,0);g.add(pv);
-const a=new T.Mesh(gA,mm(0xf3f3ee));a.position.y=-.2;a.castShadow=true;pv.add(a);const h=new T.Mesh(gHd,mm(sk));h.position.y=-.42;pv.add(h);
-pv.rotation.x=(i==1&&hold)?-2.0:-.5;
-if(i==1&&hold){const j=junk(hold-1);j.position.set(0,-.42,.04);j.rotation.x=-pv.rotation.x;pv.add(j)}});
-g.scale.setScalar(.95+rnd()*.1);g.position.set(x,.02,z);g.rotation.y=Math.atan2(-x*.6,-5.5-z);sc.add(g)}
-[-3.4,-2.5,-1.6,-.7,.2].forEach((z,r)=>{bx(8.7,.02,.8,'#7f9db3',0,.01,z+.12);
-for(let c=0;c<8;c++){const x=-3.6+c*1.03+(rnd()-.5)*.1,zz=z+(rnd()-.5)*.08,hold=rnd()<.22?1+Math.floor(rnd()*4):0;sitter(x,zz,rnd()<.5,hold);
-if(!hold&&rnd()<.5){const j=junk(Math.floor(rnd()*4));j.position.set(x+(rnd()<.5?-.5:.5),.02,zz+.1);sc.add(j)}}});
-person(6.0,-4.0,6.7,-5.5,ST({h:1.7,arms:[-.9,-1.1],hold:'phone'}));
-person(7.4,-4.1,6.7,-5.5,ST({skin:0xb98558,hijab:0xe9e9e4,skirt:1,h:1.58,arms:[-.9,-1.1],hold:'phone'}));
-person(4.2,-4.4,4.2,-5.6,ST({h:1.68,arms:[.05,-.9],hold:'bottle'}));
+        /* people */
+        function person(x, z, fx, fz, o) {
+            const g = new T.Group(),
+                k = (o.h || 1.65) / 1.7,
+                sk = o.skin || 0xc08e63;
+            const A = (c, geo, px, py, pz, p) => {
+                const m = new T.Mesh(geo, M(c));
+                m.position.set(px, py, pz);
+                m.castShadow = true;
+                (p || g).add(m);
+                return m
+            };
+            const C = T.CylinderGeometry,
+                S = T.SphereGeometry;
+            [-1, 1].forEach(s => {
+                A(o.pants, new C(.06 * k, .05 * k, .78 * k, 10), s * .085 * k, .41 * k, 0);
+                A(o.shoe || 0x2a2a2a, new T.BoxGeometry(.09 * k, .06 * k, .22 * k), s * .085 * k, .03 * k, .04 * k)
+            });
+            if (o.skirt) A(o.pants, new C(.16 * k, .21 * k, .72 * k, 16), 0, .46 * k, 0);
+            A(o.shirt, new C(.16 * k, .14 * k, .64 * k, 16), 0, 1.12 * k, 0);
+            A(sk, new C(.04 * k, .045 * k, .1 * k, 8), 0, 1.47 * k, 0);
+            A(sk, new S(.105 * k, 18, 14), 0, 1.58 * k, 0);
+            if (o.hijab) {
+                A(o.hijab, new S(.125 * k, 18, 14), 0, 1.585 * k, -.012 * k).scale.set(1, 1.08, 1.06);
+                A(o.hijab, new C(.115 * k, .2 * k, .28 * k, 18), 0, 1.4 * k, -.012 * k)
+            } else A(0x1c1410, new S(.112 * k, 16, 12), 0, 1.61 * k, -.025 * k).scale.set(1, .92, 1);
+            A(0xffffff, new T.BoxGeometry(.08 * k, .1 * k, .01 * k), 0, 1.2 * k, .15 * k);
+            [-1, 1].forEach((s, i) => {
+                const pv = new T.Group();
+                pv.position.set(s * .2 * k, 1.38 * k, 0);
+                g.add(pv);
+                A(o.shirt, new C(.04 * k, .037 * k, .36 * k, 10), 0, -.18 * k, 0, pv);
+                A(sk, new C(.034 * k, .03 * k, .26 * k, 10), 0, -.49 * k, 0, pv);
+                A(sk, new S(.038 * k, 10, 8), 0, -.64 * k, 0, pv);
+                pv.rotation.x = o.arms ? o.arms[i] : .05;
+                pv.rotation.z = s * .07;
+                if (i == 1 && o.hold) {
+                    const h = o.hold == 'fan' ? fan() : o.hold == 'phone' ? new T.Group() : new T.Group();
+                    if (o.hold == 'phone') {
+                        bx(.075, .15, .012, '#111', 0, .1, .03, h);
+                        bx(.065, .13, .002, '#8fc4e8', 0, .1, .037, h)
+                    }
+                    if (o.hold == 'bottle') {
+                        cy(.032, .032, .2, '#cfe6f3', 0, .08, .0, h, 10);
+                        cy(.012, .012, .04, GR, 0, .2, 0, h, 8)
+                    }
+                    if (o.hold == 'box') {
+                        bx(.2, .05, .13, '#f1efe6', 0, .06, .0, h);
+                        bx(.16, .014, .1, '#8fb55a', 0, .092, 0, h)
+                    }
+                    h.position.set(0, -.66 * k, .03);
+                    h.rotation.x = -pv.rotation.x;
+                    pv.add(h)
+                }
+            });
+            g.position.set(x, 0, z);
+            g.rotation.y = Math.atan2(fx - x, fz - z);
+            sc.add(g)
+        }
+        const TS = (a, h) => ({
+            shirt: 0x1f6b3a,
+            pants: 0x3b4252,
+            shoe: 0xeeeeee,
+            h,
+            arms: a
+        });
+        const ST = (o) => Object.assign({
+            shirt: 0xf3f3ee,
+            pants: 0x6f757b
+        }, o);
+        person(-1.8, -5.5, 0, -2, Object.assign(TS([-.5, -1.05], 1.72)));
+        person(1.1, -5.6, 0, -2, Object.assign(TS([.05, -1.45], 1.66), {
+            skin: 0xb98558,
+            hijab: 0xf2f2ee,
+            skirt: 1,
+            pants: 0x2e3440,
+            hold: 'box'
+        }));
+        person(-.4, -8.2, -.2, -3.8, Object.assign(TS([.05, -.8], 1.7), {
+            hold: 'fan'
+        }));
+        /* meja demonstrasi + media maggot BSF */
+        const D = new T.Group();
+        D.position.set(-3.5, 0, -5.4);
+        sc.add(D);
+        const dt = tex(1000, 400, (c, w, h) => {
+            c.fillStyle = '#f6f1e4';
+            c.fillRect(0, 0, w, h);
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, 70);
+            txt(c, 'Ayo, Pilah Sampah', 500, 190, '#1f6b3a', 800, 82);
+            txt(c, 'Organik · Anorganik · Maggot-Friendly', 500, 300, '#2a3a2f', 500, 36)
+        });
+        bx(2.1, .04, .7, '#ffffff', 0, .76, 0, D);
+        pl(2.1, .74, dt, 0, .38, .352, 0, D);
+        bx(.02, .7, .66, '#e8e8e4', -1.04, .38, 0, D);
+        bx(.02, .7, .66, '#e8e8e4', 1.04, .38, 0, D);
+        add(new T.BoxGeometry(.4, .2, .26), new T.MeshStandardMaterial({
+            color: 0xcfe6ee,
+            transparent: true,
+            opacity: .3,
+            roughness: .1
+        }), -.7, .88, 0, D);
+        bx(.38, .08, .24, '#4e3b28', -.7, .82, 0, D); {
+            let s = 11;
+            for (let i = 0; i < 40; i++) {
+                s = (s * 9301 + 49297) % 233280;
+                const a = s / 233280;
+                s = (s * 9301 + 49297) % 233280;
+                const b = s / 233280;
+                const m = add(new T.SphereGeometry(.014, 6, 5), '#efe2b3', -.7 + (a - .5) * .34, .866, (b - .5) * .2, D);
+                m.scale.set(1, .7, 1.9);
+                m.rotation.y = a * 6
+            }
+        }
+        bx(.3, .03, .22, '#2e8b4f', -.1, .795, 0, D);
+        [
+            [-.06, .03, .4],
+            [0, -.03, -.5],
+            [.07, .02, 1.2]
+        ].forEach(([a, b, r]) => {
+            bx(.1, .006, .045, '#8b6b3a', -.1 + a, .816, b, D).rotation.y = r
+        });
+        bx(.3, .03, .22, '#2f6fa8', .35, .795, 0, D);
+        cy(.03, .03, .17, '#cfe6f3', .31, .84, 0, D, 10).rotation.z = Math.PI / 2;
+        bx(.1, .01, .07, '#d94f4f', .4, .815, .03, D);
+        bx(.3, .03, .22, '#e0a526', .8, .795, 0, D);
+        add(new T.SphereGeometry(.05, 10, 8), '#f8f6ee', .76, .83, 0, D).scale.y = .6;
+        cy(.015, .015, .08, '#e8782a', .86, .83, .04, D, 8).rotation.z = 1.2;
+        add(new T.SphereGeometry(.03, 8, 6), '#5a9a3c', .84, .835, -.05, D);
+        const pt = tex(500, 1200, (c, w, h) => {
+            c.fillStyle = '#f6f1e4';
+            c.fillRect(0, 0, w, h);
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, 150);
+            txt(c, 'Kenali Maggot BSF', w / 2, 75, CR, 800, 48);
+            c.fillRect(0, 1100, w, 100);
+            txt(c, 'SWORT School', w / 2, 1150, CR, 800, 46);
+            ['Sisa makanan', '↓', 'Maggot BSF', '↓', 'Pupuk & pakan'].forEach((s, i) => txt(c, s, w / 2, 290 + i * 120, i % 2 ? '#e0a526' : '#1f6b3a', 800, i % 2 ? 70 : 62))
+        });
+        bx(.9, .04, .3, '#555', -5.4, .02, -5.4);
+        const pt2 = tex(500, 1200, (c, w, h) => {
+            const L = (s, x, y, col, wt, sz) => {
+                c.fillStyle = col;
+                c.textAlign = 'left';
+                c.textBaseline = 'middle';
+                F(c, sz, wt);
+                c.fillText(s, x, y)
+            };
+            c.fillStyle = '#f6f1e4';
+            c.fillRect(0, 0, w, h);
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, 150);
+            txt(c, 'Kenali Maggot BSF', w / 2, 66, CR, 800, 48);
+            txt(c, 'Black Soldier Fly', w / 2, 114, CR, 500, 26);
+            L('Apa itu maggot BSF?', 36, 195, '#1f6b3a', 800, 30);
+            ['Larva lalat tentara hitam', 'yang mengurai sisa makanan', 'menjadi pupuk dan pakan.'].forEach((s, i) => L(s, 36, 237 + i * 34, '#2a3a2f', 500, 26));
+            c.fillStyle = '#e3edda';
+            c.fillRect(36, 350, 428, 200);
+            L('Boleh diberikan', 56, 385, '#1f6b3a', 800, 28);
+            ['Sisa nasi & lauk', 'Sisa sayur', 'Kulit buah (pisang, apel)', 'Ampas teh'].forEach((s, i) => {
+                c.fillStyle = '#2e8b4f';
+                c.beginPath();
+                c.arc(66, 429 + i * 34, 6, 0, 7);
+                c.fill();
+                L(s, 84, 429 + i * 34, '#2a3a2f', 500, 25)
+            });
+            c.fillStyle = '#f4e3dc';
+            c.fillRect(36, 575, 428, 190);
+            L('Jangan diberikan', 56, 610, '#b0432e', 800, 28);
+            ['Plastik & kemasan', 'Tulang & duri keras', 'Jeruk, pedas & berminyak'].forEach((s, i) => {
+                c.fillStyle = '#b0432e';
+                c.beginPath();
+                c.arc(66, 654 + i * 34, 6, 0, 7);
+                c.fill();
+                L(s, 84, 654 + i * 34, '#2a3a2f', 500, 25)
+            });
+            L('Alur pengolahan', 36, 805, '#1f6b3a', 800, 28);
+            [
+                ['Sisa makanan', '#e0a526', '#2a3a2f'],
+                ['Maggot BSF', '#1f6b3a', '#f6f1e4'],
+                ['Pupuk & pakan', '#2e8b4f', '#f6f1e4']
+            ].forEach((a, i) => {
+                const y = 830 + i * 95;
+                c.fillStyle = a[1];
+                c.fillRect(36, y, 428, 60);
+                txt(c, a[0], w / 2, y + 30, a[2], 800, 30);
+                if (i < 2) {
+                    c.fillStyle = '#2a3a2f';
+                    c.beginPath();
+                    c.moveTo(w / 2 - 14, y + 66);
+                    c.lineTo(w / 2 + 14, y + 66);
+                    c.lineTo(w / 2, y + 88);
+                    c.fill()
+                }
+            });
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 1100, w, 100);
+            txt(c, 'SWORT School', w / 2, 1150, CR, 800, 46)
+        });
+        pl(.85, 2.04, pt2, -5.4, 1.07, -5.38, .15);
+        /* audiens duduk */
+        const mm = (() => {
+            const c = {};
+            return k => c[k] || (c[k] = M(k))
+        })();
+        const gS = new T.SphereGeometry(.105, 14, 10),
+            gH = new T.SphereGeometry(.125, 14, 10),
+            gHr = new T.SphereGeometry(.112, 12, 8),
+            gT = new T.CylinderGeometry(.15, .13, .56, 12),
+            gL = new T.CylinderGeometry(.07, .06, .55, 8),
+            gSk = new T.CylinderGeometry(.16, .36, .2, 16),
+            gA = new T.CylinderGeometry(.04, .036, .4, 8),
+            gHd = new T.SphereGeometry(.04, 8, 6),
+            gD = new T.CylinderGeometry(.115, .19, .3, 14);
+        let rs_ = 5;
+        const rnd = () => (rs_ = (rs_ * 9301 + 49297) % 233280) / 233280;
+        const SK = [0xc08e63, 0xb98558, 0xc99a70, 0xa87850, 0xd1a67c],
+            HJ = [0xf2f2ee, 0xe3e0d6, 0xc9ccd0];
+
+        function junk(t) {
+            const g = new T.Group();
+            if (t == 0) {
+                bx(.18, .05, .12, '#f1efe6', 0, .025, 0, g);
+                bx(.14, .012, .09, ['#8fb55a', '#e0a050', '#d9d4c0'][Math.floor(rnd() * 3)], 0, .056, 0, g)
+            } else if (t == 1) {
+                cy(.03, .03, .18, '#bcdcee', 0, .09, 0, g, 10);
+                cy(.012, .012, .03, GR, 0, .2, 0, g, 8)
+            } else if (t == 2) {
+                cy(.04, .03, .1, '#f4f8fa', 0, .05, 0, g, 10)
+            } else bx(.12, .012, .08, ['#d94f4f', '#e8b13a', '#4a7fb5'][Math.floor(rnd() * 3)], 0, .008, 0, g);
+            return g
+        }
+
+        function sitter(x, z, girl, hold) {
+            const g = new T.Group(),
+                sk = SK[Math.floor(rnd() * 5)];
+            const A = (geo, c, px, py, pz, rx) => {
+                const m = new T.Mesh(geo, mm(c));
+                m.position.set(px, py, pz);
+                if (rx) m.rotation.x = rx;
+                m.castShadow = true;
+                g.add(m);
+                return m
+            };
+            if (girl) A(gSk, 0x6f757b, 0, .12, .12);
+            else [-1, 1].forEach(s => A(gL, 0x6f757b, s * .15, .07, .3, Math.PI / 2));
+            A(gT, 0xf3f3ee, 0, .43, -.02);
+            A(gS, sk, 0, .83, 0);
+            if (girl) {
+                const hj = HJ[Math.floor(rnd() * 3)];
+                A(gH, hj, 0, .84, -.012).scale.set(1, 1.08, 1.06);
+                A(gD, hj, 0, .7, -.01)
+            } else A(gHr, 0x1c1410, 0, .855, -.022).scale.set(1, .9, 1);
+            [-1, 1].forEach((s, i) => {
+                const pv = new T.Group();
+                pv.position.set(s * .18, .68, 0);
+                g.add(pv);
+                const a = new T.Mesh(gA, mm(0xf3f3ee));
+                a.position.y = -.2;
+                a.castShadow = true;
+                pv.add(a);
+                const h = new T.Mesh(gHd, mm(sk));
+                h.position.y = -.42;
+                pv.add(h);
+                pv.rotation.x = (i == 1 && hold) ? -2.0 : -.5;
+                if (i == 1 && hold) {
+                    const j = junk(hold - 1);
+                    j.position.set(0, -.42, .04);
+                    j.rotation.x = -pv.rotation.x;
+                    pv.add(j)
+                }
+            });
+            g.scale.setScalar(.95 + rnd() * .1);
+            g.position.set(x, .02, z);
+            g.rotation.y = Math.atan2(-x * .6, -5.5 - z);
+            sc.add(g)
+        }
+        [-3.4, -2.5, -1.6, -.7, .2].forEach((z, r) => {
+            bx(8.7, .02, .8, '#7f9db3', 0, .01, z + .12);
+            for (let c = 0; c < 8; c++) {
+                const x = -3.6 + c * 1.03 + (rnd() - .5) * .1,
+                    zz = z + (rnd() - .5) * .08,
+                    hold = rnd() < .22 ? 1 + Math.floor(rnd() * 4) : 0;
+                sitter(x, zz, rnd() < .5, hold);
+                if (!hold && rnd() < .5) {
+                    const j = junk(Math.floor(rnd() * 4));
+                    j.position.set(x + (rnd() < .5 ? -.5 : .5), .02, zz + .1);
+                    sc.add(j)
+                }
+            }
+        });
+        person(4.7, -4.5, 5.3, -5.8, ST({
+            h: 1.7,
+            arms: [-.9, -1.1],
+            hold: 'phone'
+        }));
+        person(6.1, -4.5, 5.3, -5.8, ST({
+            skin: 0xb98558,
+            hijab: 0xe9e9e4,
+            skirt: 1,
+            h: 1.58,
+            arms: [-.9, -1.1],
+            hold: 'phone'
+        }));
+        person(5.4, -4.5, 5.4, -5.8, ST({
+            h: 1.68,
+            arms: [.05, -.9],
+            hold: 'bottle'
+        }));
 
 
-/* bins */
-CAT.forEach((k,i)=>{const g=new T.Group();g.position.set(3.3+i*.9,0,-5.6);g.rotation.y=-.15;sc.add(g);
-bx(.58,.98,.72,k[1],0,.55,0,g);bx(.62,.07,.77,k[1],0,1.07,0,g).material.color.multiplyScalar(.8);bx(.4,.03,.04,'#333',0,1.12,-.32,g);
-[-1,1].forEach(s=>cy(.1,.1,.05,'#222',s*.28,.1,-.3,g,14).rotation.z=Math.PI/2);
-const lt=tex(512,300,(c,w,h)=>{c.fillStyle='#fff';c.fillRect(0,0,w,h);c.fillStyle=k[1];c.fillRect(0,0,w,34);
-const L=i==2?['MAGGOT-','FRIENDLY']:[k[0].toUpperCase()];L.forEach((s,j)=>txt(c,s,w/2,L.length>1?120+j*80:170,'#1d2b22',800,L.length>1?76:84));
-txt(c,'SWORT School',w/2,270,'#1f6b3a',700,32)});
-pl(.48,.28,lt,0,.62,.365,0,g)});
+        /* bins */
+        CAT.slice(0, 0).forEach((k, i) => {
+            const g = new T.Group();
+            g.position.set(3.3 + i * .9, 0, -5.6);
+            g.rotation.y = -.15;
+            sc.add(g);
+            bx(.58, .98, .72, k[1], 0, .55, 0, g);
+            bx(.62, .07, .77, k[1], 0, 1.07, 0, g).material.color.multiplyScalar(.8);
+            bx(.4, .03, .04, '#333', 0, 1.12, -.32, g);
+            [-1, 1].forEach(s => cy(.1, .1, .05, '#222', s * .28, .1, -.3, g, 14).rotation.z = Math.PI / 2);
+            const lt = tex(512, 300, (c, w, h) => {
+                c.fillStyle = '#fff';
+                c.fillRect(0, 0, w, h);
+                c.fillStyle = k[1];
+                c.fillRect(0, 0, w, 34);
+                const L = i == 2 ? ['MAGGOT-', 'FRIENDLY'] : [k[0].toUpperCase()];
+                L.forEach((s, j) => txt(c, s, w / 2, L.length > 1 ? 120 + j * 80 : 170, '#1d2b22', 800, L.length > 1 ? 76 : 84));
+                txt(c, 'SWORT School', w / 2, 270, '#1f6b3a', 700, 32)
+            });
+            pl(.48, .28, lt, 0, .62, .365, 0, g);
+            const qh = tex(256, 300, (c, w, h) => {
+                c.fillStyle = '#fff';
+                c.fillRect(0, 0, w, h);
+                qr(c, 24, 16, 208);
+                txt(c, 'SCAN KAPAN SAJA', w / 2, 268, '#1f6b3a', 800, 24)
+            });
+            bx(.2, .22, .02, '#2b2f33', 0, .9, .37, g);
+            bx(.22, .02, .05, '#2b2f33', 0, .79, .385, g);
+            pl(.17, .2, qh, 0, .905, .382, 0, g)
+        });
 
-/* QR standing */
-const qt=tex(500,1200,(c,w,h)=>{c.fillStyle='#1f6b3a';c.fillRect(0,0,w,h);sprout(c,w/2,190,1.1,CR);txt(c,'SWORT School',w/2,260,CR,800,62);
-c.fillStyle='#fff';c.fillRect(40,320,420,420);qr(c,60,340,380);txt(c,'Scan untuk',w/2,830,CR,500,54);txt(c,'Kenali Sampahmu!',w/2,900,CR,800,50);txt(c,'[alamat website]',w/2,970,CR,500,30);c.fillStyle=CR;c.fillRect(0,1090,w,110)});
-const Q=new T.Group();Q.position.set(6.7,0,-5.5);Q.rotation.y=-.2;sc.add(Q);
-bx(.9,.04,.3,'#555',0,.02,0,Q);pl(.85,2,qt,0,1.05,.02,0,Q);
+        /* QR standing */
+        const qt = tex(500, 1200, (c, w, h) => {
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, h);
+            sprout(c, w / 2, 190, 1.1, CR);
+            txt(c, 'SWORT School', w / 2, 260, CR, 800, 62);
+            c.fillStyle = '#fff';
+            c.fillRect(40, 320, 420, 420);
+            qr(c, 60, 340, 380);
+            txt(c, 'Scan untuk', w / 2, 830, CR, 500, 54);
+            txt(c, 'Kenali Sampahmu!', w / 2, 900, CR, 800, 50);
+            txt(c, '[alamat website]', w / 2, 970, CR, 500, 30);
+            c.fillStyle = CR;
+            c.fillRect(0, 1090, w, 110)
+        });
+        const S = new T.Group();
+        S.position.set(5.3, 0, -5.8);
+        S.rotation.y = -.12;
+        sc.add(S);
+        bx(2.06, .08, .74, '#2b2f33', 0, .04, 0, S);
+        bx(2.06, .05, .76, '#3a3f44', 0, 1.03, 0, S);
+        CAT.forEach((k, i) => {
+            const x = (i - 1) * .68;
+            bx(.66, .94, .7, k[1], x, .55, 0, S);
+            cy(.17, .17, .012, '#0b0d0e', x, 1.062, .04, S, 28);
+            add(new T.TorusGeometry(.18, .022, 8, 28), M(k[1]), x, 1.062, .04, S).rotation.x = Math.PI / 2;
+            const lt = tex(512, 300, (c, w, h) => {
+                c.fillStyle = '#fff';
+                c.fillRect(0, 0, w, h);
+                c.fillStyle = k[1];
+                c.fillRect(0, 0, w, 34);
+                const L = i == 2 ? ['MAGGOT-', 'FRIENDLY'] : [k[0].toUpperCase()];
+                L.forEach((s, j) => txt(c, s, w / 2, L.length > 1 ? 120 + j * 80 : 170, '#1d2b22', 800, L.length > 1 ? 76 : 84));
+                txt(c, 'SWORT School', w / 2, 270, '#1f6b3a', 700, 32)
+            });
+            pl(.56, .33, lt, x, .6, .352, 0, S)
+        });
+        [-1, 1].forEach(s => cy(.025, .025, .55, '#2b2f33', s * .45, 1.33, -.28, S, 8));
+        bx(1.06, .8, .04, '#2b2f33', 0, 1.78, -.28, S);
+        const qp = tex(800, 600, (c, w, h) => {
+            c.fillStyle = '#1f6b3a';
+            c.fillRect(0, 0, w, h);
+            c.fillStyle = '#17562f';
+            c.fillRect(0, 0, w, 100);
+            txt(c, 'SWORT School', w / 2, 52, CR, 800, 52);
+            c.fillStyle = '#fff';
+            c.fillRect(40, 130, 360, 430);
+            qr(c, 55, 145, 330);
+            txt(c, '[alamat website]', 220, 518, '#1f6b3a', 500, 24);
+            txt(c, 'Scan untuk', 600, 205, CR, 500, 48);
+            txt(c, 'Kenali', 600, 275, CR, 800, 62);
+            txt(c, 'Sampahmu!', 600, 345, CR, 800, 60);
+            c.fillStyle = CR;
+            c.fillRect(450, 385, 300, 3);
+            CAT.forEach((k, i) => {
+                const y = 440 + i * 50;
+                c.fillStyle = k[1];
+                c.beginPath();
+                c.arc(460, y, 11, 0, 7);
+                c.fill();
+                c.fillStyle = CR;
+                c.textAlign = 'left';
+                c.textBaseline = 'middle';
+                F(c, 29, 700);
+                c.fillText(k[0], 486, y)
+            })
+        });
+        pl(1, .75, qp, 0, 1.78, -.256, 0, S);
 
-/* camera + orbit */
-const V={th:.9,ph:1.12,d:25,t:new T.Vector3(2.4,.9,-3.6)},G={th:.9,ph:1.12,d:25,t:new T.Vector3(2.4,.9,-3.6)};
-const VW={main:[.9,1.12,25,2.4,.9,-3.6],booth:[.5,1.3,11,-.5,1.1,-6],top:[.15,.45,32,2.2,0,-3.5]};
-const el=ren.domElement;let dr=null;
-el.addEventListener('pointerdown',e=>{dr=[e.clientX,e.clientY];el.setPointerCapture(e.pointerId);el.style.cursor='grabbing'});
-el.addEventListener('pointerup',()=>{dr=null;el.style.cursor='grab'});
-el.addEventListener('pointermove',e=>{if(!dr)return;G.th-=(e.clientX-dr[0])*.006;G.ph=Math.min(1.5,Math.max(.3,G.ph-(e.clientY-dr[1])*.006));dr=[e.clientX,e.clientY]});
-el.addEventListener('wheel',e=>{e.preventDefault();G.d=Math.min(46,Math.max(5,G.d*(1+e.deltaY*.001)))},{passive:false});
-document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const a=VW[b.dataset.v];G.th=a[0];G.ph=a[1];G.d=a[2];G.t.set(a[3],a[4],a[5]);document.querySelectorAll('[data-v]').forEach(x=>x.classList.toggle('on',x===b))});
+        /* camera + orbit */
+        const V = {
+                th: .9,
+                ph: 1.12,
+                d: 25,
+                t: new T.Vector3(2.4, .9, -3.6)
+            },
+            G = {
+                th: .9,
+                ph: 1.12,
+                d: 25,
+                t: new T.Vector3(2.4, .9, -3.6)
+            };
+        const VW = {
+            main: [.9, 1.12, 25, 2.4, .9, -3.6],
+            booth: [.5, 1.3, 11, -.5, 1.1, -6],
+            top: [.15, .45, 32, 2.2, 0, -3.5]
+        };
+        const el = ren.domElement;
+        let dr = null;
+        el.addEventListener('pointerdown', e => {
+            dr = [e.clientX, e.clientY];
+            el.setPointerCapture(e.pointerId);
+            el.style.cursor = 'grabbing'
+        });
+        el.addEventListener('pointerup', () => {
+            dr = null;
+            el.style.cursor = 'grab'
+        });
+        el.addEventListener('pointermove', e => {
+            if (!dr) return;
+            G.th -= (e.clientX - dr[0]) * .006;
+            G.ph = Math.min(1.5, Math.max(.3, G.ph - (e.clientY - dr[1]) * .006));
+            dr = [e.clientX, e.clientY]
+        });
+        el.addEventListener('wheel', e => {
+            e.preventDefault();
+            G.d = Math.min(46, Math.max(5, G.d * (1 + e.deltaY * .001)))
+        }, {
+            passive: false
+        });
+        document.querySelectorAll('[data-v]').forEach(b => b.onclick = () => {
+            const a = VW[b.dataset.v];
+            G.th = a[0];
+            G.ph = a[1];
+            G.d = a[2];
+            G.t.set(a[3], a[4], a[5]);
+            document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x === b))
+        });
 
-/* labels */
-const LB=[['1 Booth SWORT School',0,3.4,-8],['2 Tim sosialisator',-.4,2.1,-5.5],['3 Tempat sampah dorong',4.2,1.5,-5.6],['4 Banner QR Code',6.7,2.3,-5.5],['5 Audiens siswa',0,1.5,-1.5],['6 Kipas souvenir',.1,1.3,-7.4],['7 Demo maggot BSF',-4.2,1.5,-5.4]].map(a=>{const d=document.createElement('div');d.textContent=a[0];document.getElementById('lab').appendChild(d);return{d,p:new T.Vector3(a[1],a[2],a[3])}});
-const tl=document.getElementById('tl');tl.onclick=()=>{tl.classList.toggle('on');document.getElementById('lab').style.display=tl.classList.contains('on')?'block':'none'};
+        /* labels */
+        const LB = [
+            ['1 Booth SWORT School', 0, 3.4, -8],
+            ['2 Tim sosialisator', -.4, 2.1, -5.5],
+            ['3 Kotak pilah 3 lubang', 5.3, 1.3, -5.6],
+            ['4 Plang QR Code', 5.3, 2.5, -5.8],
+            ['5 Audiens siswa', 0, 1.5, -1.5],
+            ['6 Kipas souvenir', .1, 1.3, -7.4],
+            ['7 Demo maggot BSF', -4.2, 1.5, -5.4]
+        ].map(a => {
+            const d = document.createElement('div');
+            d.textContent = a[0];
+            document.getElementById('lab').appendChild(d);
+            return {
+                d,
+                p: new T.Vector3(a[1], a[2], a[3])
+            }
+        });
+        const tl = document.getElementById('tl');
+        tl.onclick = () => {
+            tl.classList.toggle('on');
+            document.getElementById('lab').style.display = tl.classList.contains('on') ? 'block' : 'none'
+        };
 
-function rs(){const w=innerWidth,h=innerHeight;ren.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}
-addEventListener('resize',rs);rs();
-(function loop(){requestAnimationFrame(loop);['th','ph','d'].forEach(k=>V[k]+=(G[k]-V[k])*.1);V.t.lerp(G.t,.1);
-cam.position.set(V.t.x+V.d*Math.sin(V.ph)*Math.sin(V.th),V.t.y+V.d*Math.cos(V.ph),V.t.z+V.d*Math.sin(V.ph)*Math.cos(V.th));cam.lookAt(V.t);
-LB.forEach(l=>{const p=l.p.clone().project(cam);l.d.style.left=((p.x+1)/2*innerWidth)+'px';l.d.style.top=((1-p.y)/2*innerHeight)+'px';l.d.style.visibility=p.z<1?'visible':'hidden'});
-ren.render(sc,cam)})();
-</script>
+        function rs() {
+            const w = innerWidth,
+                h = innerHeight;
+            ren.setSize(w, h);
+            cam.aspect = w / h;
+            cam.updateProjectionMatrix()
+        }
+        addEventListener('resize', rs);
+        rs();
+        (function loop() {
+            requestAnimationFrame(loop);
+            ['th', 'ph', 'd'].forEach(k => V[k] += (G[k] - V[k]) * .1);
+            V.t.lerp(G.t, .1);
+            cam.position.set(V.t.x + V.d * Math.sin(V.ph) * Math.sin(V.th), V.t.y + V.d * Math.cos(V.ph), V.t.z + V.d * Math.sin(V.ph) * Math.cos(V.th));
+            cam.lookAt(V.t);
+            LB.forEach(l => {
+                const p = l.p.clone().project(cam);
+                l.d.style.left = ((p.x + 1) / 2 * innerWidth) + 'px';
+                l.d.style.top = ((1 - p.y) / 2 * innerHeight) + 'px';
+                l.d.style.visibility = p.z < 1 ? 'visible' : 'hidden'
+            });
+            ren.render(sc, cam)
+        })();
+    </script>
 </body>
+
 </html>
