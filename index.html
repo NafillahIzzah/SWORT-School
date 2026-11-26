@@ -703,12 +703,12 @@
                 }
             }
         });
-        person(4.7, -4.5, 5.3, -5.8, ST({
+        person(6.7, -4.3, 7.4, -5.5, ST({
             h: 1.7,
             arms: [-.9, -1.1],
             hold: 'phone'
         }));
-        person(6.1, -4.5, 5.3, -5.8, ST({
+        person(8.1, -4.4, 7.4, -5.5, ST({
             skin: 0xb98558,
             hijab: 0xe9e9e4,
             skirt: 1,
@@ -723,105 +723,237 @@
         }));
 
 
-        /* bins */
-        CAT.slice(0, 0).forEach((k, i) => {
-            const g = new T.Group();
-            g.position.set(3.3 + i * .9, 0, -5.6);
-            g.rotation.y = -.15;
-            sc.add(g);
-            bx(.58, .98, .72, k[1], 0, .55, 0, g);
-            bx(.62, .07, .77, k[1], 0, 1.07, 0, g).material.color.multiplyScalar(.8);
-            bx(.4, .03, .04, '#333', 0, 1.12, -.32, g);
-            [-1, 1].forEach(s => cy(.1, .1, .05, '#222', s * .28, .1, -.3, g, 14).rotation.z = Math.PI / 2);
-            const lt = tex(512, 300, (c, w, h) => {
-                c.fillStyle = '#fff';
-                c.fillRect(0, 0, w, h);
-                c.fillStyle = k[1];
-                c.fillRect(0, 0, w, 34);
-                const L = i == 2 ? ['MAGGOT-', 'FRIENDLY'] : [k[0].toUpperCase()];
-                L.forEach((s, j) => txt(c, s, w / 2, L.length > 1 ? 120 + j * 80 : 170, '#1d2b22', 800, L.length > 1 ? 76 : 84));
-                txt(c, 'SWORT School', w / 2, 270, '#1f6b3a', 700, 32)
-            });
-            pl(.48, .28, lt, 0, .62, .365, 0, g);
-            const qh = tex(256, 300, (c, w, h) => {
-                c.fillStyle = '#fff';
-                c.fillRect(0, 0, w, h);
-                qr(c, 24, 16, 208);
-                txt(c, 'SCAN KAPAN SAJA', w / 2, 268, '#1f6b3a', 800, 24)
-            });
-            bx(.2, .22, .02, '#2b2f33', 0, .9, .37, g);
-            bx(.22, .02, .05, '#2b2f33', 0, .79, .385, g);
-            pl(.17, .2, qh, 0, .905, .382, 0, g)
+        /* tempat sampah dorong (sesuai mockup produk) */
+        const PL = c => new T.MeshPhysicalMaterial({
+            color: c,
+            roughness: .5,
+            clearcoat: .25,
+            clearcoatRoughness: .5,
+            side: T.DoubleSide
         });
 
-        /* QR standing */
-        const qt = tex(500, 1200, (c, w, h) => {
-            c.fillStyle = '#1f6b3a';
-            c.fillRect(0, 0, w, h);
-            sprout(c, w / 2, 190, 1.1, CR);
-            txt(c, 'SWORT School', w / 2, 260, CR, 800, 62);
-            c.fillStyle = '#fff';
-            c.fillRect(40, 320, 420, 420);
-            qr(c, 60, 340, 380);
-            txt(c, 'Scan untuk', w / 2, 830, CR, 500, 54);
-            txt(c, 'Kenali Sampahmu!', w / 2, 900, CR, 800, 50);
-            txt(c, '[alamat website]', w / 2, 970, CR, 500, 30);
-            c.fillStyle = CR;
-            c.fillRect(0, 1090, w, 110)
-        });
-        const S = new T.Group();
-        S.position.set(5.3, 0, -5.8);
-        S.rotation.y = -.12;
-        sc.add(S);
-        bx(2.06, .08, .74, '#2b2f33', 0, .04, 0, S);
-        bx(2.06, .05, .76, '#3a3f44', 0, 1.03, 0, S);
-        CAT.forEach((k, i) => {
-            const x = (i - 1) * .68;
-            bx(.66, .94, .7, k[1], x, .55, 0, S);
-            cy(.17, .17, .012, '#0b0d0e', x, 1.062, .04, S, 28);
-            add(new T.TorusGeometry(.18, .022, 8, 28), M(k[1]), x, 1.062, .04, S).rotation.x = Math.PI / 2;
-            const lt = tex(512, 300, (c, w, h) => {
+        function tap(wT, dT, wB, dB, h, mat) {
+            let g = new T.CylinderGeometry(1, 1, h, 4, 1, true);
+            g.rotateY(Math.PI / 4);
+            const p = g.attributes.position;
+            for (let i = 0; i < p.count; i++) {
+                const t = p.getY(i) > 0,
+                    sx = Math.sign(p.getX(i)),
+                    sz = Math.sign(p.getZ(i));
+                p.setX(i, sx * (t ? wT : wB) / 2);
+                p.setZ(i, sz * (t ? dT : dB) / 2)
+            }
+            g = g.toNonIndexed();
+            g.computeVertexNormals();
+            const m = new T.Mesh(g, mat);
+            m.castShadow = m.receiveShadow = true;
+            return m
+        }
+        const BC = [
+            ['ORGANIK', '#2a7d46', '#2a7d46', 'Daun, ranting, kayu'],
+            ['ANORGANIK', '#2f6fa8', '#2f6fa8', 'Botol, gelas plastik, kardus'],
+            ['MAGGOT-FRIENDLY', '#f2b705', '#c99600', 'Sisa makanan untuk maggot']
+        ];
+
+        function labelTex(i) {
+            const k = BC[i];
+            return tex(480, 580, (c, w, h) => {
                 c.fillStyle = '#fff';
                 c.fillRect(0, 0, w, h);
                 c.fillStyle = k[1];
-                c.fillRect(0, 0, w, 34);
-                const L = i == 2 ? ['MAGGOT-', 'FRIENDLY'] : [k[0].toUpperCase()];
-                L.forEach((s, j) => txt(c, s, w / 2, L.length > 1 ? 120 + j * 80 : 170, '#1d2b22', 800, L.length > 1 ? 76 : 84));
-                txt(c, 'SWORT School', w / 2, 270, '#1f6b3a', 700, 32)
+                c.fillRect(0, 0, w, 36);
+                c.fillRect(0, h - 36, w, 36);
+                c.save();
+                c.translate(0, 0);
+                if (i == 0) {
+                    c.fillStyle = k[1];
+                    c.strokeStyle = k[1];
+                    c.lineWidth = 11;
+                    c.lineCap = 'round';
+                    c.beginPath();
+                    c.moveTo(240, 260);
+                    c.lineTo(240, 160);
+                    c.stroke();
+                    c.beginPath();
+                    c.moveTo(240, 215);
+                    c.bezierCurveTo(170, 215, 135, 170, 135, 110);
+                    c.bezierCurveTo(205, 110, 240, 155, 240, 215);
+                    c.fill();
+                    c.beginPath();
+                    c.moveTo(240, 185);
+                    c.bezierCurveTo(310, 185, 345, 140, 345, 80);
+                    c.bezierCurveTo(275, 80, 240, 125, 240, 185);
+                    c.fill()
+                }
+                if (i == 1) {
+                    c.fillStyle = k[1];
+                    c.fillRect(155, 130, 70, 130);
+                    c.fillRect(175, 92, 30, 40);
+                    c.fillRect(170, 78, 40, 16);
+                    c.fillStyle = '#fff';
+                    c.fillRect(155, 170, 70, 34);
+                    c.beginPath();
+                    c.moveTo(270, 120);
+                    c.lineTo(350, 120);
+                    c.lineTo(332, 260);
+                    c.lineTo(288, 260);
+                    c.closePath();
+                    c.fill();
+                    c.fillStyle = '#fff';
+                    c.fillRect(280, 170, 60, 30)
+                }
+                if (i == 2) {
+                    c.translate(240, 170);
+                    c.scale(4.2, 4.2);
+                    c.fillStyle = '#8a6a10';
+                    c.beginPath();
+                    c.moveTo(-12, -16);
+                    c.bezierCurveTo(-4, -12, 4, -12, 12, -16);
+                    c.bezierCurveTo(14, -8, 6, -4, 6, 0);
+                    c.bezierCurveTo(6, 4, 14, 8, 12, 16);
+                    c.bezierCurveTo(4, 12, -4, 12, -12, 16);
+                    c.bezierCurveTo(-14, 8, -6, 4, -6, 0);
+                    c.bezierCurveTo(-6, -4, -14, -8, -12, -16);
+                    c.closePath();
+                    c.fill()
+                }
+                c.restore();
+                const L = i == 2 ? ['MAGGOT-', 'FRIENDLY'] : [k[0]];
+                L.forEach((s, j) => txt(c, s, w / 2, L.length > 1 ? 335 + j * 72 : 355, '#1d2b22', 800, i == 1 ? 66 : i == 2 ? 72 : 88));
+                txt(c, k[3], w / 2, i == 2 ? 490 : 440, '#2a3a2f', 500, 27);
+                txt(c, 'SWORT School', w / 2, i == 2 ? 535 : 500, '#1f6b3a', 700, 26)
+            })
+        }
+
+        function fillBin(i, g) {
+            const sy = .725;
+            if (i == 0) {
+                [
+                    [-.1, .1, .4],
+                    [.08, -.12, -.6],
+                    [.12, .15, 1.1],
+                    [-.12, -.18, .2]
+                ].forEach(([x, z, r]) => {
+                    bx(.13, .012, .06, i ? '#7b8f3a' : '#7b8f3a', x, sy + .008, z, g).rotation.y = r
+                });
+                [
+                    [-.05, .0, .5],
+                    [.1, -.05, -.3]
+                ].forEach(([x, z, r]) => {
+                    const s = cy(.008, .008, .2, '#6b4f2a', x, sy + .012, z, g, 6);
+                    s.rotation.z = Math.PI / 2;
+                    s.rotation.y = r
+                })
+            }
+            if (i == 1) {
+                bx(.28, .03, .2, '#b08a5a', .0, sy + .02, -.05, g).rotation.y = .3;
+                [
+                    [-.12, .12],
+                    [.1, .16]
+                ].forEach(([x, z], j) => {
+                    const b = cy(.032, .032, .2, '#bcdcee', x, sy + .05, z, g, 12);
+                    b.rotation.z = Math.PI / 2;
+                    b.rotation.y = j ? .6 : -.4
+                });
+                cy(.04, .03, .1, '#f4f8fa', .12, sy + .06, -.18, g, 12);
+                cy(.04, .03, .1, '#f4f8fa', .12, sy + .1, -.18, g, 12)
+            }
+            if (i == 2) {
+                [
+                    [-.1, .05],
+                    [-.04, .1],
+                    [.02, .04],
+                    [-.08, -.03],
+                    [.05, .12]
+                ].forEach(([x, z]) => add(new T.SphereGeometry(.04, 10, 8), '#f8f6ee', x, sy + .03, z, g).scale.y = .6);
+                cy(.016, .016, .09, '#e8782a', .12, sy + .02, -.1, g, 8).rotation.z = 1.2;
+                add(new T.SphereGeometry(.035, 8, 6), '#5a9a3c', -.12, sy + .03, -.12, g);
+                bx(.14, .012, .07, '#e8c63a', .1, sy + .01, .12, g).rotation.y = .5
+            }
+        }
+        BC.forEach((k, i) => {
+            const g = new T.Group();
+            g.position.set(4.5 + i * .8, 0, -5.8);
+            g.rotation.y = -.12;
+            sc.add(g);
+            const bm = PL(k[1]),
+                dk = PL(k[2]);
+            g.add(tap(.6, .76, .48, .62, .88, bm).translateY(.56));
+            [
+                [.66, .05, .05, 0, .385],
+                [.66, .05, .05, 0, -.385],
+                [.05, .05, .78, .315, 0],
+                [.05, .05, .78, -.315, 0]
+            ].forEach(([w, h, d, x, z]) => bx(w, h, d, dk, x, 1.0, z, g));
+            const bag = new T.MeshStandardMaterial({
+                color: 0x14171a,
+                roughness: .3,
+                side: T.DoubleSide
             });
-            pl(.56, .33, lt, x, .6, .352, 0, S)
+            const bg = tap(.57, .72, .47, .58, .84, bag);
+            bg.translateY(.58);
+            g.add(bg);
+            [
+                [.72, .07, .05, 0, .405],
+                [.72, .07, .05, 0, -.405],
+                [.05, .07, .84, .34, 0],
+                [.05, .07, .84, -.34, 0]
+            ].forEach(([w, h, d, x, z]) => bx(w, h, d, bag, x, .985, z, g));
+            bx(.56, .02, .7, '#101214', 0, .7, 0, g);
+            fillBin(i, g);
+            const lg = new T.Group();
+            lg.position.set(0, 1.04, -.39);
+            g.add(lg);
+            bx(.66, .05, .8, bm, 0, 0, .4, lg);
+            bx(.66, .07, .03, dk, 0, -.04, .785, lg);
+            bx(.03, .07, .76, dk, .315, -.04, .4, lg);
+            bx(.03, .07, .76, dk, -.315, -.04, .4, lg);
+            bx(.3, .02, .05, dk, 0, .03, .72, lg);
+            const hn = cy(.025, .025, .5, dk, 0, 0, 0, lg, 10);
+            hn.rotation.z = Math.PI / 2;
+            lg.rotation.x = -1.3;
+            const cl = Math.atan(.07 / .88),
+                lb = labelTex(i);
+            const lp = pl(.48, .58, lb, 0, .56, .351, 0, g);
+            lp.rotation.x = cl;
+            const hb = cy(.02, .02, .46, dk, 0, .9, -.47, g, 10);
+            hb.rotation.z = Math.PI / 2;
+            [-1, 1].forEach(s => bx(.035, .035, .12, dk, s * .2, .9, -.41, g));
+            const ax = cy(.014, .014, .56, '#555', 0, .1, -.28, g, 8);
+            ax.rotation.z = Math.PI / 2;
+            [-1, 1].forEach(s => {
+                const w = cy(.1, .1, .05, '#1d1f21', s * .27, .1, -.28, g, 24);
+                w.rotation.z = Math.PI / 2;
+                const h = cy(.05, .05, .06, '#8a8f93', s * .27, .1, -.28, g, 16);
+                h.rotation.z = Math.PI / 2;
+                bx(.08, .12, .1, dk, s * .2, .06, .22, g)
+            })
         });
-        [-1, 1].forEach(s => cy(.025, .025, .55, '#2b2f33', s * .45, 1.33, -.28, S, 8));
-        bx(1.06, .8, .04, '#2b2f33', 0, 1.78, -.28, S);
-        const qp = tex(800, 600, (c, w, h) => {
+        /* standing QR */
+        const qt3 = tex(620, 900, (c, w, h) => {
             c.fillStyle = '#1f6b3a';
             c.fillRect(0, 0, w, h);
             c.fillStyle = '#17562f';
-            c.fillRect(0, 0, w, 100);
-            txt(c, 'SWORT School', w / 2, 52, CR, 800, 52);
+            c.fillRect(0, 0, w, 110);
+            txt(c, 'SWORT SCHOOL', w / 2, 58, CR, 800, 56);
             c.fillStyle = '#fff';
-            c.fillRect(40, 130, 360, 430);
-            qr(c, 55, 145, 330);
-            txt(c, '[alamat website]', 220, 518, '#1f6b3a', 500, 24);
-            txt(c, 'Scan untuk', 600, 205, CR, 500, 48);
-            txt(c, 'Kenali', 600, 275, CR, 800, 62);
-            txt(c, 'Sampahmu!', 600, 345, CR, 800, 60);
+            c.fillRect(100, 150, 420, 420);
+            qr(c, 115, 165, 390);
+            txt(c, 'SCAN UNTUK', w / 2, 640, CR, 500, 50);
+            txt(c, 'KENALI SAMPAHMU!', w / 2, 700, CR, 800, 46);
             c.fillStyle = CR;
-            c.fillRect(450, 385, 300, 3);
-            CAT.forEach((k, i) => {
-                const y = 440 + i * 50;
-                c.fillStyle = k[1];
-                c.beginPath();
-                c.arc(460, y, 11, 0, 7);
-                c.fill();
-                c.fillStyle = CR;
-                c.textAlign = 'left';
-                c.textBaseline = 'middle';
-                F(c, 29, 700);
-                c.fillText(k[0], 486, y)
-            })
+            c.fillRect(150, 745, 320, 3);
+            ['Menuju website SWORT School:', 'panduan pemilahan &', 'fitur identifikasi sampah'].forEach((s, i) => txt(c, s, w / 2, 790 + i * 34, CR, 500, 26))
         });
-        pl(1, .75, qp, 0, 1.78, -.256, 0, S);
+        const Q = new T.Group();
+        Q.position.set(7.4, 0, -5.5);
+        Q.rotation.y = -.4;
+        sc.add(Q);
+        cy(.3, .32, .05, '#2b2f33', 0, .025, 0, Q, 32);
+        cy(.03, .03, 1.0, '#7a7f84', 0, .55, -.02, Q, 12);
+        bx(.66, .96, .04, '#2b2f33', 0, 1.42, -.02, Q);
+        pl(.62, .9, qt3, 0, 1.42, .002, 0, Q);
+        bx(.04, .04, .18, '#2b2f33', 0, .9, -.02, Q);
 
         /* camera + orbit */
         const V = {
@@ -877,8 +1009,8 @@
         const LB = [
             ['1 Booth SWORT School', 0, 3.4, -8],
             ['2 Tim sosialisator', -.4, 2.1, -5.5],
-            ['3 Kotak pilah 3 lubang', 5.3, 1.3, -5.6],
-            ['4 Plang QR Code', 5.3, 2.5, -5.8],
+            ['3 Tempat sampah dorong', 5.3, 1.6, -5.8],
+            ['4 Standing QR Code', 7.4, 2.0, -5.5],
             ['5 Audiens siswa', 0, 1.5, -1.5],
             ['6 Kipas souvenir', .1, 1.3, -7.4],
             ['7 Demo maggot BSF', -4.2, 1.5, -5.4]
